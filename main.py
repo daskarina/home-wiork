@@ -1,33 +1,15 @@
-import requests
+import sqlite3
 
-res_parse_list = []
-response = requests.get("https:// coinmarketcap.com/")
-response_text = response.text
-response_parse = response_text.split("<span>")
-for parse_elem_1 in response_parse:
-    if parse_elem_1.startswith("$"):
-        for parse_elem_2 in parse_elem_1.split("</span>"):
-            if parse_elem_2.startswith("$") and parse_elem_2[1].isdigit():
-                res_parse_list.append(parse_elem_2)
+connection = sqlite3.connect("itstep_DB.sl3", 5)
+cur = connection.cursor()
+cur.execute("INSERT INTO first_table (name) VALUES ('Ann');")
 
-bitcoin_exchange_rate = res_parse_list[0]
-print(bitcoin_exchange_rate)
+cur.execute("INSERT INTO first_table (name) VALUES ('Kats');")
 
-from bs4 import BeautifulSoup
-import requests
-
-
-response = requests.get("https://coinmarketcap.com/")
-
-
-if response.status_code == 200:
-    soup = BeautifulSoup(response.text,features="html.parser")
-    soup_list = soup.find_all("a", {"href": "/currencies/bitcoin/markets/"})
-    res = soup_list[0].find("span")
-    print(res.text)
-
-
-
-
-
-
+cur.execute("INSERT INTO first_table (name)VALUES ('John');")
+connection.commit()
+cur.execute("SELECT rowid, name FROM first_table;")
+connection.commit()
+res = cur.fetchall()
+print(res)
+connection.close()
